@@ -15,9 +15,8 @@ def build_formatter_agent(llm):
     def formatter_node(state: dict) -> dict:
         article = state["article"]
 
-        console.print("\n[#A78BFA]排版Agent 正在处理格式...[/]")
-
-        system_prompt = """你是一个专业的公众号排版师。
+        with console.status("[#A78BFA]排版Agent 正在处理格式...[/]", spinner="dots"):
+            system_prompt = """你是一个专业的公众号排版师。
 
 排版规范：
 - 文章标题：加粗，用【】包裹，如 **【标题】**
@@ -34,12 +33,13 @@ def build_formatter_agent(llm):
 
 只输出排版后的正文内容，不要加任何说明或前缀。"""
 
-        messages = [
-            SystemMessage(content=system_prompt),
-            HumanMessage(content=article)
-        ]
+            messages = [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=article)
+            ]
 
-        response = llm.invoke(messages)
+            response = llm.invoke(messages)
+
         console.print("[green]排版完成[/]")
 
         return {

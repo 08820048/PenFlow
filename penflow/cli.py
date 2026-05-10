@@ -95,7 +95,7 @@ def run():
     }
 
     # ── 第一阶段：生成选题 ──
-    console.print("\n[dim]正在生成选题，请稍候...[/]")
+    console.print()
     agent_app.invoke(initial_state, config=config_map)
 
     # 展示选题
@@ -122,7 +122,6 @@ def run():
 
     # ── 第二阶段：写作 + 排版 ──
     agent_app.update_state(config_map, {"selected_topic": selected_topic})
-    console.print("[dim]正在创作文章，请稍候...[/]\n")
     final_result = agent_app.invoke(None, config=config_map)
 
     # 获取最终文章

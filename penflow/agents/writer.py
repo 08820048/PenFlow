@@ -16,9 +16,8 @@ def build_writer_agent(llm):
         selected_topic = state["selected_topic"]
         account_position = state["account_position"]
 
-        console.print("\n[#A78BFA]写作Agent 正在创作文章...[/]")
-
-        system_prompt = f"""你是一个专业的微信公众号写作者。
+        with console.status("[#A78BFA]写作Agent 正在创作文章...[/]", spinner="dots"):
+            system_prompt = f"""你是一个专业的微信公众号写作者。
 账号定位：{account_position}
 
 写作要求：
@@ -33,12 +32,13 @@ def build_writer_agent(llm):
 请根据以下选题写一篇完整的公众号文章：
 {selected_topic}"""
 
-        messages = [
-            SystemMessage(content=system_prompt),
-            HumanMessage(content=f"请根据选题写完整文章：{selected_topic}")
-        ]
+            messages = [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=f"请根据选题写完整文章：{selected_topic}")
+            ]
 
-        response = llm.invoke(messages)
+            response = llm.invoke(messages)
+
         console.print("[green]文章创作完成[/]")
 
         return {
