@@ -34,7 +34,7 @@ def init_config(force: bool = False):
     existing = load_config()
 
     console.print(Panel.fit(
-        "[bold #A78BFA]🔧 初始化配置[/]\n"
+        "[bold #A78BFA]初始化配置[/]\n"
         "[dim]Key 将保存到 ~/.penflow/config.json[/]",
         border_style="#3730a3"
     ))
@@ -55,7 +55,7 @@ def init_config(force: bool = False):
     )
 
     if not deepseek_key or not tavily_key:
-        console.print("[red]❌ Key 不能为空[/]")
+        console.print("[red]Key 不能为空[/]")
         raise typer.Exit(1)
 
     save_config({
@@ -63,14 +63,14 @@ def init_config(force: bool = False):
         "tavily_key": tavily_key,
     })
 
-    console.print(f"\n[green]✅ 配置已保存到 {CONFIG_FILE}[/]\n")
+    console.print(f"\n[green]配置已保存到 {CONFIG_FILE}[/]\n")
 
 
 def get_config() -> dict:
     """获取配置，未初始化则引导用户配置"""
     config = load_config()
     if not config.get("deepseek_key") or not config.get("tavily_key"):
-        console.print("[yellow]⚠️  未找到配置，请先初始化[/]\n")
+        console.print("[yellow]未找到配置，请先初始化[/]\n")
         init_config()
         config = load_config()
     return config

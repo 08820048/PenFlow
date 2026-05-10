@@ -15,22 +15,22 @@ def build_formatter_agent(llm):
     def formatter_node(state: dict) -> dict:
         article = state["article"]
 
-        console.print("\n[#A78BFA]🎨 排版Agent 正在处理格式...[/]")
+        console.print("\n[#A78BFA]排版Agent 正在处理格式...[/]")
 
         system_prompt = """你是一个专业的公众号排版师。
 
 排版规范：
 - 文章标题：加粗，用【】包裹，如 **【标题】**
-- 小节标题：前加 emoji，如「🔥 一、第一节标题」
+- 小节标题：前加编号，如「一、第一节标题」
 - 重点内容：加粗或用「」引用
 - 每段之间空一行
 - 数据和结论单独成段加粗
 - 结尾固定加：
 
 ---
-💬 你怎么看？欢迎在评论区留言
-👍 觉得有用就点个赞，让更多人看到
-📌 关注账号，不错过每期内容
+你怎么看？欢迎在评论区留言
+觉得有用就点个赞，让更多人看到
+关注账号，不错过每期内容
 
 只输出排版后的正文内容，不要加任何说明或前缀。"""
 
@@ -40,7 +40,7 @@ def build_formatter_agent(llm):
         ]
 
         response = llm.invoke(messages)
-        console.print("[green]✅ 排版完成[/]")
+        console.print("[green]排版完成[/]")
 
         return {
             "messages": state.get("messages", []) + [response],

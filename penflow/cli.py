@@ -28,7 +28,7 @@ console = Console()
 
 def print_banner():
     console.print(Panel.fit(
-        "[bold #A78BFA]📝  微信公众号内容助手[/]\n"
+        "[bold #A78BFA]PenFlow[/]\n"
         "[dim]选题 · 写作 · 排版 · 一键生成[/]",
         border_style="#3730a3",
         padding=(1, 4),
@@ -37,7 +37,7 @@ def print_banner():
 
 def print_topics(topics: list):
     """用 Rich 表格展示选题"""
-    console.print("\n[bold #A78BFA]📋 为你推荐 3 个选题[/]\n")
+    console.print("\n[bold #A78BFA]为你推荐 3 个选题[/]\n")
     for i, topic in enumerate(topics, 1):
         lines = topic.strip().split("\n")
         title = lines[0] if lines else f"选题{i}"
@@ -75,7 +75,7 @@ def run():
     content_direction = Prompt.ask("[#A78BFA]请输入本次创作方向[/] [dim](如：AI、职场成长)[/]")
 
     if not account_position or not content_direction:
-        console.print("[red]❌ 账号定位和创作方向不能为空[/]")
+        console.print("[red]账号定位和创作方向不能为空[/]")
         raise typer.Exit(1)
 
     # 构建图
@@ -95,7 +95,7 @@ def run():
     }
 
     # ── 第一阶段：生成选题 ──
-    console.print("\n[dim]⏳ 正在生成选题，请稍候...[/]")
+    console.print("\n[dim]正在生成选题，请稍候...[/]")
     agent_app.invoke(initial_state, config=config_map)
 
     # 展示选题
@@ -118,17 +118,17 @@ def run():
         else:
             console.print("[yellow]请输入 1、2、3 或 0[/]")
 
-    console.print(f"\n[green]✅ 已选择：[/]{selected_topic[:60]}{'...' if len(selected_topic) > 60 else ''}\n")
+    console.print(f"\n[green]已选择：[/]{selected_topic[:60]}{'...' if len(selected_topic) > 60 else ''}\n")
 
     # ── 第二阶段：写作 + 排版 ──
     agent_app.update_state(config_map, {"selected_topic": selected_topic})
-    console.print("[dim]⏳ 正在创作文章，请稍候...[/]\n")
+    console.print("[dim]正在创作文章，请稍候...[/]\n")
     final_result = agent_app.invoke(None, config=config_map)
 
     # 获取最终文章
     formatted_article = final_result.get("formatted_article", "")
     if not formatted_article:
-        console.print("[red]❌ 文章生成失败，请重试[/]")
+        console.print("[red]文章生成失败，请重试[/]")
         raise typer.Exit(1)
 
     # 保存文件
@@ -143,7 +143,7 @@ def run():
 
     # 完成提示
     console.print(Panel.fit(
-        f"[bold green]🎉 文章生成完成！[/]\n"
+        f"[bold green]文章生成完成！[/]\n"
         f"[dim]已保存到：[/][bold]{output_path.absolute()}[/]",
         border_style="green",
         padding=(0, 2),

@@ -16,7 +16,7 @@ def build_writer_agent(llm):
         selected_topic = state["selected_topic"]
         account_position = state["account_position"]
 
-        console.print("\n[#A78BFA]✍️  写作Agent 正在创作文章...[/]")
+        console.print("\n[#A78BFA]写作Agent 正在创作文章...[/]")
 
         system_prompt = f"""你是一个专业的微信公众号写作者。
 账号定位：{account_position}
@@ -39,7 +39,7 @@ def build_writer_agent(llm):
         ]
 
         response = llm.invoke(messages)
-        console.print("[green]✅ 文章创作完成[/]")
+        console.print("[green]文章创作完成[/]")
 
         return {
             "messages": state.get("messages", []) + [response],

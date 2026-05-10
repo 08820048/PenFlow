@@ -102,7 +102,7 @@ def topic_agent_node(state: State):
     选题 Agent
     搜索当前热点，结合账号定位和创作方向，推荐3个选题
     """
-    print("\n🔍 选题Agent 正在搜索热点...\n")
+    print("\n选题Agent 正在搜索热点...\n")
 
     account_position = state["account_position"]
     content_direction = state["content_direction"]
@@ -152,7 +152,7 @@ def topic_agent_node(state: State):
         topics = [content]  # 解析失败时把全文作为选题展示
 
     print("\n[DEBUG 选题原文]\n", content)
-    print("✅ 选题生成完成")
+    print("选题生成完成")
     return {
         "messages": [response],
         "topics": topics,
@@ -176,7 +176,7 @@ def write_agent_node(state: State):
     写作 Agent
     根据选定选题，生成完整文章
     """
-    print("\n✍️  写作Agent 正在创作文章...\n")
+    print("\n写作Agent 正在创作文章...\n")
 
     selected_topic = state["selected_topic"]
     account_position = state["account_position"]
@@ -202,7 +202,7 @@ def write_agent_node(state: State):
     response = llm.invoke(messages)
     article = response.content
 
-    print("✅ 文章创作完成")
+    print("文章创作完成")
     return {
         "messages": [response],
         "article": article,
@@ -215,7 +215,7 @@ def format_agent_node(state: State):
     排版 Agent
     把文章转成微信公众号标准格式
     """
-    print("\n🎨 排版Agent 正在处理格式...\n")
+    print("\n排版Agent 正在处理格式...\n")
 
     article = state["article"]
 
@@ -223,14 +223,14 @@ def format_agent_node(state: State):
 
 排版规范：
 - 标题：加粗，前后加【】，如 **【标题】**
-- 正文小节标题：前加emoji图标，如 🔥 第一节
+- 正文小节标题：前加编号，如 第一节
 - 重点内容：用「」引用，或加粗
 - 段落间距：每段后空一行
 - 结尾固定加：
   ---
-  💬 你怎么看？欢迎在评论区留言
-  👍 觉得有用就点个赞，让更多人看到
-  📌 关注账号，不错过每期内容
+  你怎么看？欢迎在评论区留言
+  觉得有用就点个赞，让更多人看到
+  关注账号，不错过每期内容
 
 请对以下文章进行排版，只输出排版后的内容，不要加额外说明："""
 
@@ -242,7 +242,7 @@ def format_agent_node(state: State):
     response = llm.invoke(messages)
     formatted_article = response.content
 
-    print("✅ 排版完成")
+    print("排版完成")
     return {
         "messages": [response],
         "formatted_article": formatted_article,
@@ -299,7 +299,7 @@ app = builder.compile(checkpointer=memory, interrupt_before=["human_select"])
 # ─────────────────────────────────────────
 def main():
     print("=" * 55)
-    print("   📝 微信公众号内容助手")
+    print("   PenFlow")
     print("=" * 55)
 
     # 用户输入
@@ -307,7 +307,7 @@ def main():
     content_direction = input("\n请输入本次创作方向（如：AI、职场成长、亲子教育）：\n> ").strip()
 
     if not account_position or not content_direction:
-        print("❌ 账号定位和创作方向不能为空")
+        print("账号定位和创作方向不能为空")
         return
 
     thread_id = f"session_{date.today()}"
@@ -325,7 +325,7 @@ def main():
     }
 
     # ── 第一阶段：生成选题（遇到 human_select 暂停）──
-    print("\n⏳ 正在生成选题，请稍候...\n")
+    print("\n正在生成选题，请稍候...\n")
     app.invoke(initial_state, config=config)
 
     # ── 读取选题，让用户选择 ──
@@ -333,7 +333,7 @@ def main():
     topics = current_state.values.get("topics", [])
 
     print("\n" + "=" * 55)
-    print("📋 以下是为你推荐的3个选题：")
+    print("以下是为你推荐的3个选题：")
     print("=" * 55)
     for i, topic in enumerate(topics, 1):
         print(f"\n【选题 {i}】\n{topic}")
@@ -350,19 +350,19 @@ def main():
         else:
             print("请输入 1、2、3 或 0")
 
-    print(f"\n✅ 已选择：{selected_topic[:50]}...")
+    print(f"\n已选择：{selected_topic[:50]}...")
 
     # ── 第二阶段：写入用户选择，恢复图继续执行 ──
     app.update_state(config, {"selected_topic": selected_topic})
 
-    print("\n⏳ 正在创作文章，请稍候...\n")
+    print("\n正在创作文章，请稍候...\n")
     final_result = app.invoke(None, config=config)
 
     # ── 输出结果 ──
     formatted_article = final_result.get("formatted_article", "")
 
     if not formatted_article:
-        print("❌ 文章生成失败，请重试")
+        print("文章生成失败，请重试")
         return
 
     # 保存到文件
@@ -377,8 +377,8 @@ def main():
         f.write(formatted_article)
 
     print("\n" + "=" * 55)
-    print("🎉 文章生成完成！")
-    print(f"📄 已保存到：{output_path}")
+    print("文章生成完成！")
+    print(f"已保存到：{output_path}")
     print("=" * 55)
     print("\n--- 文章预览（前500字）---\n")
     print(formatted_article[:500] + "..." if len(formatted_article) > 500 else formatted_article)

@@ -40,7 +40,7 @@ def build_topic_agent(llm, tavily_key: str):
         account_position = state["account_position"]
         content_direction = state["content_direction"]
 
-        console.print("\n[#A78BFA]🔍 选题Agent 正在搜索热点...[/]")
+        console.print("\n[#A78BFA]选题Agent 正在搜索热点...[/]")
 
         system_prompt = f"""你是一个专业的公众号选题策划师。
 今天的日期是 {date.today()}。
@@ -88,7 +88,7 @@ def build_topic_agent(llm, tavily_key: str):
             else:
                 topics.append(f"选题{i}（解析失败）\n原文：{content[:200]}")
 
-        console.print("[green]✅ 选题生成完成[/]")
+        console.print("[green]选题生成完成[/]")
         return {
             "messages": state.get("messages", []) + [response],
             "topics": topics,
