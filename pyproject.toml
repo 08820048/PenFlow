@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "penflow"
+version = "0.1.0"
+description = "PenFlow — 微信公众号内容助手"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "typer[all]>=0.12",
+    "langgraph>=0.3",
+    "langchain-openai>=0.3",
+    "langchain-tavily>=0.1",
+    "langchain-core>=0.3",
+]
+
+[project.scripts]
+penflow = "penflow.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["penflow*"]
