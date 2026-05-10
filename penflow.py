@@ -176,8 +176,6 @@ def write_agent_node(state: State):
     写作 Agent
     根据选定选题，生成完整文章
     """
-    print("\n写作Agent 正在创作文章...\n")
-
     selected_topic = state["selected_topic"]
     account_position = state["account_position"]
 
@@ -199,12 +197,19 @@ def write_agent_node(state: State):
         HumanMessage(content=f"请根据选题写完整文章：{selected_topic}")
     ]
 
-    response = llm.invoke(messages)
-    article = response.content
+    print("\n--- 文章创作中 ---\n")
+    full_content = []
+    for chunk in llm.stream(messages):
+        if chunk.content:
+            import sys
+            sys.stdout.write(chunk.content)
+            sys.stdout.flush()
+            full_content.append(chunk.content)
+    print()
 
-    print("文章创作完成")
+    article = "".join(full_content)
     return {
-        "messages": [response],
+        "messages": [AIMessage(content=article)],
         "article": article,
         "next": "format_agent"
     }
@@ -355,7 +360,6 @@ def main():
     # ── 第二阶段：写入用户选择，恢复图继续执行 ──
     app.update_state(config, {"selected_topic": selected_topic})
 
-    print("\n正在创作文章，请稍候...\n")
     final_result = app.invoke(None, config=config)
 
     # ── 输出结果 ──
@@ -380,8 +384,6 @@ def main():
     print("文章生成完成！")
     print(f"已保存到：{output_path}")
     print("=" * 55)
-    print("\n--- 文章预览（前500字）---\n")
-    print(formatted_article[:500] + "..." if len(formatted_article) > 500 else formatted_article)
 
 
 if __name__ == "__main__":

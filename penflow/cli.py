@@ -148,11 +148,6 @@ def run():
         padding=(0, 2),
     ))
 
-    # 预览前 300 字
-    console.print("\n[dim]--- 文章预览 ---[/]\n")
-    preview = formatted_article[:300] + "..." if len(formatted_article) > 300 else formatted_article
-    console.print(preview)
-
 
 if __name__ == "__main__":
     app()

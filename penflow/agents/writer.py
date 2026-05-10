@@ -3,7 +3,7 @@
 根据选定选题，生成完整的公众号文章
 """
 
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from rich.console import Console
 
 console = Console()
@@ -16,8 +16,7 @@ def build_writer_agent(llm):
         selected_topic = state["selected_topic"]
         account_position = state["account_position"]
 
-        with console.status("[#A78BFA]写作Agent 正在创作文章...[/]", spinner="dots"):
-            system_prompt = f"""你是一个专业的微信公众号写作者。
+        system_prompt = f"""你是一个专业的微信公众号写作者。
 账号定位：{account_position}
 
 写作要求：
@@ -32,18 +31,23 @@ def build_writer_agent(llm):
 请根据以下选题写一篇完整的公众号文章：
 {selected_topic}"""
 
-            messages = [
-                SystemMessage(content=system_prompt),
-                HumanMessage(content=f"请根据选题写完整文章：{selected_topic}")
-            ]
+        messages = [
+            SystemMessage(content=system_prompt),
+            HumanMessage(content=f"请根据选题写完整文章：{selected_topic}")
+        ]
 
-            response = llm.invoke(messages)
+        console.print("\n[dim]--- 文章创作中 ---[/]\n")
+        full_content = []
+        for chunk in llm.stream(messages):
+            if chunk.content:
+                console.print(chunk.content, end="", highlight=False)
+                full_content.append(chunk.content)
+        console.print()
 
-        console.print("[green]文章创作完成[/]")
-
+        article = "".join(full_content)
         return {
-            "messages": state.get("messages", []) + [response],
-            "article": response.content,
+            "messages": state.get("messages", []) + [AIMessage(content=article)],
+            "article": article,
             "next": "format_agent"
         }
 
