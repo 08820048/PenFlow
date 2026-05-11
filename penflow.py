@@ -46,7 +46,7 @@ class State(TypedDict):
 # ─────────────────────────────────────────
 tavily_search = TavilySearch(
     max_results=5,
-    tavily_api_key="your-tavily-key",   # 替换成你的 Key
+    tavily_api_key=os.getenv("TAVILY_API_KEY", "your-tavily-key"),
 )
 
 
@@ -56,7 +56,7 @@ tavily_search = TavilySearch(
 def make_llm(bind_tools=None):
     llm = ChatOpenAI(
         model="deepseek-v4-pro",
-        api_key="your-deepseek-key",    # 替换成你的 Key
+        api_key=os.getenv("DEEPSEEK_API_KEY", "your-deepseek-key"),
         base_url="https://api.deepseek.com",
         temperature=0.7,                 # 创作类任务适当提高随机性
         extra_body={"thinking": {"type": "disabled"}},
